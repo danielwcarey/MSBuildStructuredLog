@@ -78,6 +78,11 @@ namespace Microsoft.Build.Logging.StructuredLogger
         private object ReadNode()
         {
             var name = reader.ReadString();
+            if (string.IsNullOrWhiteSpace(name)) 
+            {
+                return null;
+            }
+
             var node = Serialization.CreateNode(name);
             var folder = node as Folder;
             if (folder != null)
@@ -94,7 +99,10 @@ namespace Microsoft.Build.Logging.StructuredLogger
                 for (int i = 0; i < childrenCount; i++)
                 {
                     var child = ReadNode();
-                    treeNode.AddChild(child);
+                    if (child != null) 
+                    {
+                        treeNode.AddChild(child);
+                    }
                 }
             }
 
